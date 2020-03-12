@@ -20,6 +20,9 @@ int main()
   named_mutex named_mtx{open_or_create, "mtx"};
   named_condition named_cnd{open_or_create, "cnd"};
   
+  // if comments the following two block of lock, the bug happened at test17
+  // run test17, after console show "checking pred, not 100", and then run test18
+  // test18 send twice notification, but test17 not caught
   {
     // must use lock before notify, because wait pred will ignore the notification if without lock
     scoped_lock<named_mutex> lock{named_mtx};
@@ -27,8 +30,6 @@ int main()
   }
   named_cnd.notify_one();
   std::cout << "notify one" << std::endl;
-  
-//  std::this_thread::sleep_for(15s);
   
   *i = 100;
   {

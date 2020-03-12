@@ -18,7 +18,6 @@ shared_memory_object::remove("Boost");
   named_mutex named_mtx{open_or_create, "mtx"};
   named_condition named_cnd{open_or_create, "cnd"};
   
-//  std::this_thread::sleep_for(10s);
   scoped_lock<named_mutex> lock{named_mtx};
   named_cnd.wait(lock, [i]() {
     bool ret = false;
