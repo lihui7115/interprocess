@@ -53,3 +53,15 @@ rule test_all
 }
 
 test-suite interprocess_example : [ test_all r ] : <threading>multi ;
+
+
+# project
+#     : requirements <library>../build//interprocess
+#       <hardcode-dll-paths>true
+#       <link>static
+#     ;
+
+exe test13_sync : test13_sync.cpp ;
+exe test17_sync_wait_pred : test17_sync_wait_pred.cpp ;
+exe test18_sync_notify_twice : test18_sync_notify_twice.cpp ;
+
