@@ -28,11 +28,13 @@ int main ()
       message_queue::size_type recvd_size;
 
       //Receive 100 numbers
+      // 队列中的数据被任一进程接收后就清空了
       for(int i = 0; i < 100; ++i){
          int number;
          mq.receive(&number, sizeof(number), recvd_size, priority);
-         if(number != i || recvd_size != sizeof(number))
-            return 1;
+         std::cout << "receive " << number << std::endl;
+//         if(number != i || recvd_size != sizeof(number))
+//            return 1;
       }
    }
    catch(interprocess_exception &ex){

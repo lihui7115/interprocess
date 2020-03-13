@@ -12,8 +12,10 @@
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <iostream>
 #include <vector>
+#include <thread>
 
 using namespace boost::interprocess;
+using namespace std::chrono_literals;
 
 int main ()
 {
@@ -31,7 +33,9 @@ int main ()
 
       //Send 100 numbers
       for(int i = 0; i < 100; ++i){
+        std::cout << "send " << i << std::endl;
          mq.send(&i, sizeof(i), 0);
+         std::this_thread::sleep_for(2s);
       }
    }
    catch(interprocess_exception &ex){

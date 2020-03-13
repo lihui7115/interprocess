@@ -53,6 +53,9 @@ int main ()
    const int NumMsg = 100;
 
    //Insert data in the array
+   // 顺序是最优的，不要调换
+   // 插入数据前， 首先判断是空，然后判断区域能操作
+   // 插入数据后， 通知区域能操作，然后通知已写
    for(int i = 0; i < NumMsg; ++i){
       data->nempty.wait();
       data->mutex.wait();

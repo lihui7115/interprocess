@@ -58,6 +58,7 @@ int main ()
       for(int i = 0; i < NumMsg; ++i){
          scoped_lock<interprocess_mutex> lock(data->mutex);
          if(data->message_in){
+            // 队列满，等待
             data->cond_full.wait(lock);
          }
          if(i == (NumMsg-1))
@@ -66,6 +67,7 @@ int main ()
             std::sprintf(data->items, "%s_%d", "my_trace", i);
 
          //Notify to the other process that there is a message
+         // 取到数据，列队为空，通知空的条件变量
          data->cond_empty.notify_one();
 
          //Mark message buffer as full
