@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
    #if 1
    std::string file_name(boost::interprocess::ipcdetail::get_temporary_path());
    file_name += "/"; file_name += test::get_process_id_name();
+   std::cout << file_name << std::endl;
    const char *FileName = file_name.c_str();
    #else
    //->

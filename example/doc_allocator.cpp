@@ -64,6 +64,8 @@ int main ()
 
    //Allocate and deallocate memory for 100 ints
    allocator_instance2.deallocate(allocator_instance.allocate(100), 100);
+   
+   // 使用allocate于shared_memory类似于malloc于libc
 
    return 0;
 }

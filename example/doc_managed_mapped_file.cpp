@@ -7,6 +7,8 @@
 // See http://www.boost.org/libs/interprocess for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
+#define BOOST_INTERPROCESS_MAPPED_FILES
+
 #if defined(BOOST_INTERPROCESS_MAPPED_FILES)
 
 #include <boost/interprocess/detail/config_begin.hpp>
@@ -17,6 +19,8 @@
 #include <boost/interprocess/allocators/allocator.hpp>
 #include <cstddef>
 #include <cstdio>
+
+#include <iostream>
 
 //<-
 #include "../test/get_process_id_name.hpp"
@@ -44,28 +48,29 @@ int main ()
    const std::size_t FileSize = 1000;
    file_mapping::remove(FileName);
 
+   MyList *mylist1;
    try{
       MyList::size_type old_size = 0;
       managed_mapped_file::handle_t list_handle;
       {
          managed_mapped_file mfile_memory(create_only, FileName, FileSize);
-         MyList *mylist = mfile_memory.construct<MyList>("MyList")
+         MyList *mylist1 = mfile_memory.construct<MyList>("MyList")
                               (mfile_memory.get_segment_manager());
 
          //Obtain handle, that identifies the list in the buffer
-         list_handle = mfile_memory.get_handle_from_address(mylist);
+         list_handle = mfile_memory.get_handle_from_address(mylist1);
 
          //Fill list until there is no more room in the file
          try{
             while(1) {
-               mylist->insert(mylist->begin(), 0);
+               mylist1->insert(mylist1->begin(), 0);
             }
          }
          catch(const bad_alloc &){
             //mapped file is full
          }
          //Let's obtain the size of the list
-         old_size = mylist->size();
+         old_size = mylist1->size();
       }
       //To make the list bigger, let's increase the mapped file
       //in FileSize bytes more.
@@ -77,8 +82,18 @@ int main ()
 
          //If mapping address has changed, the old pointer is invalid,
          //so use previously obtained handle to find the new pointer.
-         MyList *mylist = static_cast<MyList *>
-                           (mfile_memory.get_address_from_handle(list_handle));
+//         MyList *mylist = static_cast<MyList *>
+//                           (mfile_memory.get_address_from_handle(list_handle));
+//         MyList *mylist = static_cast<MyList *>
+//                           (mfile_memory.get_address_from_handle(list_handle));
+//         
+         std::pair<MyList*, std::size_t> p = mfile_memory.find<MyList>("MyList");
+         MyList *mylist = NULL;
+         if (p.first) {
+           mylist = p.first;
+         }
+         
+         assert(mylist);
 
          //Fill list until there is no more room in the file
          try{
@@ -92,8 +107,12 @@ int main ()
 
          //Let's obtain the new size of the list
          MyList::size_type new_size = mylist->size();
+         MyList::size_type new_size1 = mylist1->size();
 
          assert(new_size > old_size);
+         std::cout << "new_size: " << new_size << std::endl;
+         std::cout << "new_size1: " << new_size1 << std::endl;
+//         assert(new_size > new_size1);   // failed
 
          //Destroy list
          mfile_memory.destroy_ptr(mylist);
@@ -103,7 +122,7 @@ int main ()
       file_mapping::remove(FileName);
       throw;
    }
-   file_mapping::remove(FileName);
+//   file_mapping::remove(FileName);
    return 0;
 }
 

@@ -13,6 +13,7 @@
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <cstdlib> //std::system
 #include <sstream>
+#include <iostream>
 //<-
 #include "../test/get_process_id_name.hpp"
 //->
@@ -54,6 +55,7 @@ int main (int argc, char *argv[])
       //Allocate a portion of the segment (raw memory)
       managed_shared_memory::size_type free_memory = segment.get_free_memory();
       void * shptr = segment.allocate(1024/*bytes to allocate*/);
+      std::cout << shptr << std::endl;
 
       //Check invariant
       if(free_memory <= segment.get_free_memory())
@@ -61,6 +63,8 @@ int main (int argc, char *argv[])
 
       //An handle from the base address can identify any byte of the shared
       //memory segment even if it is mapped in different base addresses
+      // handle值可以跨进程访问
+
       managed_shared_memory::handle_t handle = segment.get_handle_from_address(shptr);
       std::stringstream s;
       s << argv[0] << " " << handle;
@@ -68,6 +72,8 @@ int main (int argc, char *argv[])
       s << " " << test::get_process_id_name();
       //->
       s << std::ends;
+      
+      std::cout << s.str() << std::endl;
       //Launch child process
       if(0 != std::system(s.str().c_str()))
          return 1;
@@ -96,7 +102,8 @@ int main (int argc, char *argv[])
 
       //Get buffer local address from handle
       void *msg = segment.get_address_from_handle(handle);
-
+      std::cout << msg << std::endl;
+      
       //Deallocate previously allocated memory
       segment.deallocate(msg);
    }

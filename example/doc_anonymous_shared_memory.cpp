@@ -18,6 +18,7 @@ int main ()
 {
    using namespace boost::interprocess;
    try{
+      // 匿名共享内存，在本进程内使用。也会提高效率
       //Create an anonymous shared memory segment with size 1000
       mapped_region region(anonymous_shared_memory(1000));
 

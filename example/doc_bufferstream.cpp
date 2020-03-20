@@ -66,6 +66,8 @@ int main ()
    //Allocate a buffer in shared memory to write data
    char *my_cstring =
       segment.construct<char>("MyCString")[BufferSize](0);
+      
+      // 用途是？ 利用<<及stream_iterator
    bufferstream mybufstream(my_cstring, BufferSize);
 
    //Now write data to the buffer

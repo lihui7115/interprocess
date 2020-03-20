@@ -61,7 +61,34 @@ test-suite interprocess_example : [ test_all r ] : <threading>multi ;
 #       <link>static
 #     ;
 
+# 注意看上面all_rules中的 [run] 与 [link]的区别
+
+exe test01 : test01.cpp ;
 exe test13_sync : test13_sync.cpp ;
 exe test17_sync_wait_pred : test17_sync_wait_pred.cpp ;
 exe test18_sync_notify_twice : test18_sync_notify_twice.cpp ;
 
+# not working
+# for local fileb in [ glob test*.cpp ]
+# {
+#   exe $(fileeb::-4) : $(fileb) ;
+# }
+
+# test01.cpp
+# test02.cpp
+# test03.cpp
+# test04.cpp
+# test05_managed.cpp
+# test06_managed.cpp
+# test07_managed.cpp
+# test08_managed.cpp
+# test09_managed.cpp
+# test10_atomic_func.cpp
+# test11_sync.cpp
+# test12_sync.cpp
+# test13_sync.cpp
+# test14_sync_wait.cpp
+# test15_sync_notify_one.cpp
+# test16_sync_notify_all.cpp
+# test17_sync_wait_pred.cpp
+# test18_sync_notify_twice.cpp

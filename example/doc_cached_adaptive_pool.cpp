@@ -55,6 +55,7 @@ int main ()
 
    //Create a cached_adaptive_pool that allocates ints from the managed segment
    //The number of chunks per segment is the default value
+   // 没看明白与cached_adaptive_pool与adaptive_pool的区别
    typedef cached_adaptive_pool<int, managed_shared_memory::segment_manager>
       cached_adaptive_pool_t;
    cached_adaptive_pool_t allocator_instance(segment.get_segment_manager());
